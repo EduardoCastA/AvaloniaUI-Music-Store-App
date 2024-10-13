@@ -1,4 +1,5 @@
 ﻿using ReactiveUI;
+using System.Reactive.Linq;
 using System.Windows.Input;
 
 namespace MusicStoreExample.ViewModels
@@ -7,11 +8,18 @@ namespace MusicStoreExample.ViewModels
     {
         public ICommand BuyMusicCommand { get; }
 
+        public Interaction<MusicStoreViewModel, AlbumViewModel?> ShowDialog { get; }
+
         public MainWindowViewModel()
         {
-            BuyMusicCommand = ReactiveCommand.Create(() =>
-            {
 
+            ShowDialog = new Interaction<MusicStoreViewModel, AlbumViewModel?>();
+
+            BuyMusicCommand = ReactiveCommand.CreateFromTask(async () =>
+            {
+                var store = new MusicStoreViewModel();
+
+                var result = await ShowDialog.Handle(store);
             });
         }
     }
